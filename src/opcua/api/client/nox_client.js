@@ -42,7 +42,7 @@ export default class NoxClient {
   async crawlDomain(endpoint) {
     const session = this.sessions[endpoint];
     try {
-      this.session[endpoint].addrSpace = await session.crawl('ObjectsFolder');
+      this.sessions[endpoint].addrSpace = await session.crawl('ObjectsFolder');
     } catch (err) {
       sysLog.error(err);
     }

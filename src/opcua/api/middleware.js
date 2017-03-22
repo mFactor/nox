@@ -4,8 +4,9 @@ import NoxClient from 'opcua/api/client/nox_client';
  * OPC UA middleware
  */
 const opcua = (app, env) => {
-  const client = new NoxClient();
+  // const client = new NoxClient();
   app.use((req, res, next) => {
+    /*
     if (req.originalUrl === '/') {
       (async function uaTest() {
         const ep = 'opc.tcp://mfactorengineering.com:4840';
@@ -14,6 +15,7 @@ const opcua = (app, env) => {
         await client.disconnect(ep);
       }());
     }
+    */
     next();
   });
 };
