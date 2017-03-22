@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+bower_components/
+dist/server.js
+npm-debug.log
+*.swp
+*/*.swp
+*~
+*/*~
+*#
+*/*#
+*.#
+*/*.#
+yarn.lock
+nodemon.json
+.tern-port
+.tern-project
