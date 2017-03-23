@@ -64,7 +64,7 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               presets: ['es2015', 'react', 'stage-0', 'react-hmre'],
-              plugins: ['transform-decorators-legacy', 'transform-runtime'],
+              plugins: ['transform-decorators-legacy', 'transform-runtime', ['import', { libraryName: 'antd', style: 'css' }]],
             },
           },
         ],
@@ -82,9 +82,9 @@ module.exports = {
         ],
       },
       {
-        test: /\.scss$/,
+        test: /\.css$/,
         loaders: [
-          'isomorphic-style-loader',
+          'style-loader',
           { loader: 'css-loader', options: { importLoaders: 1 } },
           'postcss-loader',
         ],

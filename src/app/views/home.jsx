@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'antd';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import style from 'app/less/home';
 
@@ -16,7 +17,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <div id="home-view">
-        Hey
+        <Button type="primary">That was ugly</Button>
       </div>
     );
   }

@@ -52,7 +52,7 @@ module.exports = {
       {
         test: /\.jsx?/,
         exclude: /node_modules/,
-        include: [resolve(__dirname, './src')],
+        // include: [resolve(__dirname, './src')],
         use: [
           {
             loader: 'babel-loader',
