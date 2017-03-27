@@ -1,5 +1,5 @@
 /**
- * Log client-side event to server
+ * Connect to OPC UA endpoint
  */
 const connect = (endpoint) => {
   return {
@@ -9,7 +9,7 @@ const connect = (endpoint) => {
 };
 
 /**
- * Log client-side event to server
+ * Disconnect from OPC UA endpoint
  */
 const disconnect = (endpoint) => {
   return {

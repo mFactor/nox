@@ -16,12 +16,13 @@ import IsoStyle from './base/components/iso_style.jsx';
 /**
  * Load client modules, hyrdrate initial server store
  */
+let rootSagaTask;
+const sagaMiddleware = createSagaMiddleware();
 const moduleLoad = (routes) => {
   const rootState = window.__ROOT_STATE__;
-  const sagaMiddleware = createSagaMiddleware();
   const store = createStore(rootReducer, rootState,
                             composeWithDevTools(applyMiddleware(sagaMiddleware)));
-  sagaMiddleware.run(rootSaga);
+  rootSagaTask = sagaMiddleware.run(rootSaga);
 
   // Front-end routing
   render(
@@ -32,9 +33,11 @@ const moduleLoad = (routes) => {
     </Provider>,
     document.getElementById('app-entry'),
   );
+
+  return store;
 };
 
-moduleLoad(routes);
+const store = moduleLoad(routes);
 
 /**
  * Hot module replacement
@@ -43,5 +46,16 @@ moduleLoad(routes);
  * the new hot loader in the future
  */
 if (module.hot) {
+  module.hot.accept('./sagas.jsx', () => {
+    const nextSaga = require('./sagas.jsx').default;
+    rootSagaTask.cancel();
+    rootSagaTask.done.then(() => {
+      rootSagaTask = sagaMiddleware.run(nextSaga);
+    });
+  });
+  module.hot.accept('./reducers.jsx', () => {
+    const nextRoot = require('./reducers.jsx').default;
+    store.replaceReducer(nextRoot);
+  });
   module.hot.accept();
 }

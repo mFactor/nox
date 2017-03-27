@@ -1,29 +1,18 @@
 /**
  * OPC UA reducers
+ * @param {object} state - Redux state object
  */
 const opcua = (state = {}, action) => {
   switch (action.type) {
-    case 'CONNECT_SUCCESS':
+    case 'UPDATE_SESSION':
       return {
         ...state,
         [action.endpoint]: {
-          isConnected: true,
+          isConnected: action.status,
           addressSpace: action.addressSpace,
           browseResults: null,
           subscriptions: {},
-          msg: 'Connect Succeeded',
-        },
-      };
-    case 'CONNECT_FAILURE':
-      console.log('fail');
-      return {
-        ...state,
-        [action.endpoint]: {
-          isConnected: false,
-          addressSpace: null,
-          browseResults: null,
-          subscriptions: {},
-          msg: 'Connect Failed',
+          msg: action.msg,
         },
       };
     default:

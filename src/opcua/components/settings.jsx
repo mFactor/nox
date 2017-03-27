@@ -43,13 +43,13 @@ export default class Settings extends Component {
           okText="Change Settings"
           onOk={this.handleOk}
           cancelText="Cancel"
-          width="768"
+          width="768px"
           onCancel={this.handleCancel}
         >
           <Row>
             <Col span={8}>
               <Menu
-                style={{ width: 240 }}
+                style={{ width: `240px` }}
                 mode="inline"
               >
                 <SubMenu

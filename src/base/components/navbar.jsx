@@ -44,7 +44,7 @@ export default class Navbar extends React.Component {
       <Header className="navbar-header">
         <Row>
           <Col span={4}>
-            Nox OPCUA Client
+            Nox OPCUA Clients suck ass
           </Col>
           <Col span={6} offset={14}>
             <Menu

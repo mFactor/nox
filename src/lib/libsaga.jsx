@@ -24,7 +24,8 @@ function* fetchAsync(url, body) {
   try {
     // call attaches promise, must yield to mimic 'then' for json promise
     const response = yield call(fetch, url, opts);
-    return yield response.json();
+    const json = yield response.json();
+    return json;
   } catch (err) {
     yield put({
       type: 'ERROR',

@@ -12,14 +12,19 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  log: (msg, level) => {
-    dispatch(log(msg, level));
-  },
-  connect: (endpoint) => {
-    dispatch(nox.connect(endpoint));
-  },
-});
+const mapDispatchToProps = (dispatch) => {
+  return {
+    log: (msg, level) => {
+      dispatch(log(msg, level));
+    },
+    connect: (endpoint) => {
+      dispatch(nox.connect(endpoint));
+    },
+    disconnect: (endpoint) => {
+      dispatch(nox.disconnect(endpoint));
+    },
+  };
+};
 
 /**
  * Base (or root) component for application
@@ -28,8 +33,9 @@ const mapDispatchToProps = (dispatch) => ({
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Rig extends Component {
   static propTypes = {
-    log: React.PropTypes.func.isRequired,
+    // log: React.PropTypes.func.isRequired,
     connect: React.PropTypes.func.isRequired,
+    disconnect: React.PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -64,7 +70,9 @@ export default class Rig extends Component {
                 <li onClick={() => this.props.connect(this.state.endpoint)}>
                   <a><Icon type="plus" /></a>
                 </li>
-                <li><a><Icon type="minus" /></a></li>
+                <li onClick={() => this.props.disconnect(this.state.endpoint)}>
+                  <a><Icon type="minus" /></a>
+                </li>
                 <li><a><Icon type="key" /></a></li>
                 <li><a><Icon type="disconnect" /></a></li>
                 <li onClick={() => this.handleClick()}><a><Icon type="setting" /></a></li>

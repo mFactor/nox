@@ -33,6 +33,7 @@ module.exports = {
   plugins: [
     // new webpack.ContextReplacementPlugin(/load-runner/, /^\.\//),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
     // new webpack.optimize.AggressiveMergingPlugin(),
   ],
   module: {
@@ -55,7 +56,7 @@ module.exports = {
       {
         test: /\.jsx?/,
         exclude: /node_modules/,
-        // include: [resolve(__dirname, '../src')],
+        // include: [resolve(__dirname, './src')],
         use: [
           {
             // enforce: 'pre',

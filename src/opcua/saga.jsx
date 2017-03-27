@@ -33,9 +33,11 @@ function* connect(action) {
   const json = yield fetchAsync(`/opcua/api/connect`, action);
   if (json) {
     yield put({
-      type: 'CONNECT_SUCCESS',
+      type: 'UPDATE_SESSION',
       endpoint: action.endpoint,
-      addressSpace: json.address_space,
+      status: json.status,
+      msg: json.msg,
+      addressSpace: json.data,
     });
   } else {
     yield put({
@@ -52,8 +54,11 @@ function* disconnect(action) {
   const json = yield fetchAsync(`/opcua/api/disconnect`, action);
   if (json) {
     yield put({
-      type: 'DISCONNECT_SUCCESS',
-      status: 'OK',
+      type: 'UPDATE_SESSION',
+      endpoint: action.endpoint,
+      status: json.status,
+      msg: json.msg,
+      addressSpace: json.data,
     });
   } else {
     yield put({
