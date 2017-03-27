@@ -8,7 +8,7 @@ export default class UaSession {
 
   constructor(eventBus) {
     this.opts = {
-
+      keepSessionAlive: true,
     };
     this.client = new Ua.OPCUAClient(this.opts);
     this.crawler = null;

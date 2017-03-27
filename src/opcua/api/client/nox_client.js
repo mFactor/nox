@@ -1,10 +1,12 @@
-import { EventEmitter } from 'events';
 import { sysLog } from 'lib/log';
 import UaSession from 'opcua/api/client/session';
 
 export default class NoxClient {
-  constructor() {
-    this.eventBus = new EventEmitter();
+  constructor(eventBus) {
+    if (!eventBus) {
+      throw new Error('An event emitter must be passed to a new client instance');
+    }
+    this.eventBus = eventBus;
     this.sessions = {};
   }
 
@@ -17,8 +19,18 @@ export default class NoxClient {
       await session.connect(endpoint);
       await session.createSession();
       this.sessions[endpoint] = session;
+      return {
+        status: true,
+        msg: `Connected - ${endpoint}`,
+        data: null,
+      };
     } catch (err) {
       sysLog.error(err);
+      return {
+        status: false,
+        msg: `Error connecting - ${endpoint}`,
+        err,
+      };
     }
   }
 
@@ -31,8 +43,17 @@ export default class NoxClient {
       await session.deleteSession();
       await session.disconnect();
       delete this.sessions[endpoint];
+      return {
+        status: true,
+        msg: `Disconnected - ${endpoint}`,
+        data: null,
+      };
     } catch (err) {
-      sysLog.error(err);
+      return {
+        status: false,
+        msg: `Error disconnecting - ${endpoint}`,
+        err,
+      };
     }
   }
 
@@ -43,8 +64,17 @@ export default class NoxClient {
     const session = this.sessions[endpoint];
     try {
       this.sessions[endpoint].addrSpace = await session.crawl('ObjectsFolder');
+      return {
+        status: true,
+        msg: `Crawl successful - ${endpoint}`,
+        data: this.sessions[endpoint].addrSpace,
+      };
     } catch (err) {
-      sysLog.error(err);
+      return {
+        status: false,
+        msg: `Error crawling - ${endpoint}`,
+        err,
+      };
     }
   }
 

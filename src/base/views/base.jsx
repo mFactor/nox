@@ -1,6 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Layout } from 'antd';
+import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { log } from 'base/action.jsx';
+import style from 'base/less/base';
+import Navbar from 'base/components/navbar.jsx';
+import Rig from 'opcua/components/rig.jsx';
+import Foot from 'base/components/footer.jsx';
 
 const mapStateToProps = (state) => {
   return {
@@ -17,6 +23,7 @@ const mapDispatchToProps = (dispatch) => ({
 /**
  * Base (or root) component for application
  */
+@withStyles(style)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Base extends React.Component {
   static propTypes = {
@@ -37,9 +44,12 @@ export default class Base extends React.Component {
 
   render() {
     return (
-      <div id="base-view">
+      <Layout>
+        <Navbar />
+        <Rig />
         {this.props.children}
-      </div>
+        <Foot />
+      </Layout>
     );
   }
 }

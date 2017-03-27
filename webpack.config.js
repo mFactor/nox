@@ -13,16 +13,14 @@ module.exports = {
   target: 'web',
   // devtool: 'cheap-eval-source-map',
   entry: [
-    // 'react-hot-loader/patch',
-    // 'webpack-hot-middleware/client?dynamicPublicPath=true&' + devUrl,
-    'webpack-dev-server/client?' + devUrl,
+    `webpack-dev-server/client?${devUrl}`,
     'webpack/hot/only-dev-server',
     './render.jsx',
   ],
   output: {
     filename: 'render.bundle.js',
     path: resolve(__dirname, './dist/static'),
-    publicPath: devUrl + '/',
+    publicPath: `${devUrl}/`,
   },
   context: resolve(__dirname, './src'),
   resolve: {
@@ -33,7 +31,7 @@ module.exports = {
     extensions: ['.jsx', '.js', '.json', '.less', '.scss'],
   },
   plugins: [
-    //new webpack.ContextReplacementPlugin(/load-runner/, /^\.\//),
+    // new webpack.ContextReplacementPlugin(/load-runner/, /^\.\//),
     new webpack.HotModuleReplacementPlugin(),
     // new webpack.optimize.AggressiveMergingPlugin(),
   ],
@@ -64,7 +62,8 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               presets: ['es2015', 'react', 'stage-0', 'react-hmre'],
-              plugins: ['transform-decorators-legacy', 'transform-runtime', ['import', { libraryName: 'antd', style: 'css' }]],
+              plugins: ['transform-decorators-legacy', 'transform-runtime',
+                        ['import', { libraryName: 'antd', style: 'css' }]],
             },
           },
         ],

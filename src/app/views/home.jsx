@@ -1,7 +1,10 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Layout } from 'antd';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import style from 'app/less/home';
+import AddressSpace from 'opcua/components/address_space.jsx';
+
+const { Content, Sider } = Layout;
 
 /**
  * Base (or root) component for application
@@ -16,9 +19,18 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <div id="home-view">
-        <Button type="primary">That was ugly</Button>
-      </div>
+      <Layout>
+        <Sider>
+          <AddressSpace />
+        </Sider>
+        <Content>
+          Home content
+        </Content>
+        <Sider>
+          Node properties
+          Node actions
+        </Sider>
+      </Layout>
     );
   }
 }
