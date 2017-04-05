@@ -9,7 +9,8 @@ const opcua = (state = {}, action) => {
         ...state,
         [action.endpoint]: {
           isConnected: action.status,
-          addressSpace: action.addressSpace,
+          isActive: action.active,
+          addressSpace: [action.addressSpace],
           browseResults: null,
           subscriptions: {},
           msg: action.msg,

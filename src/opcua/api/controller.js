@@ -9,6 +9,13 @@ import { Router } from 'express';
 import NoxClient from 'opcua/api/client/nox_client';
 
 const clients = {};
+
+/**
+ * OPC UA Controller
+ * @param {object} app - Express app object
+ * @param {object} env - process.ENV ref
+ * @param {object} io - Connected socketIO ref
+ */
 const opcua = (app, env, io) => {
   const router = Router();
   const noxIo = io.of('/opcua');
@@ -49,12 +56,44 @@ const opcua = (app, env, io) => {
     const result = await clients[req.sessionID].disconnect(req.body.endpoint);
     delete clients[req.sessionID];
     handleErr(result, req, res, next);
-    req[env.NAMESPACE].log.server('info', `Disconnected from ${req.body.endpoint}`);
+    req[env.NAMESPACE].log.server('info', `${result.msg}`);
 
     // Send result
     res.json(result);
     next();
   });
+
+  /**
+   * Browse
+   */
+  router.post('/browse', async (req, res, next) => {
+    // Check validity
+    if (!clients[req.sessionID]) {
+      res.sendStatus(204);
+    }
+
+    // Browse
+    const result = await clients[req.sessionID].browse(req.body.endpoint);
+    handleErr(result, req, res, next);
+    req[env.NAMESPACE].log.server('info', `${result.msg}`);
+
+    // Send result
+    res.json(result);
+    next();
+  });
+
+  /**
+   * Validate connected request
+   * @param {object} req - Request to validate
+   * @returns {boolean} status - Status of validated request
+   */
+  function validateReq(req, res) {
+    // Check validity
+    if (!clients[req.sessionID]) {
+      res.sendStatus(204);
+    }
+    return req;
+  }
 
   /**
    * Router error handler

@@ -10,7 +10,7 @@ import Foot from 'base/components/footer.jsx';
 
 const mapStateToProps = (state) => {
   return {
-
+    opcua: state.opcua,
   };
 };
 

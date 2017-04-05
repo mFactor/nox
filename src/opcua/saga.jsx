@@ -35,6 +35,7 @@ function* connect(action) {
     yield put({
       type: 'UPDATE_SESSION',
       endpoint: action.endpoint,
+      active: true,
       status: json.status,
       msg: json.msg,
       addressSpace: json.data,
@@ -56,6 +57,7 @@ function* disconnect(action) {
     yield put({
       type: 'UPDATE_SESSION',
       endpoint: action.endpoint,
+      active: false,
       status: json.status,
       msg: json.msg,
       addressSpace: json.data,

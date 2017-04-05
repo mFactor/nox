@@ -35,6 +35,7 @@
     "import/no-extraneous-dependencies": [0],
     "import/no-unresolved": [0],
     "import/extensions": ["error", "never", {"jsx": "always"}],
+    "arrow-parens": ["error", "always"],
     // End custom
     "no-unused-vars": [1],
     "no-use-before-define": [2, "nofunc"],
