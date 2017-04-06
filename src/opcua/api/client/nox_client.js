@@ -79,6 +79,30 @@ export default class NoxClient {
   }
 
   /**
+   * Recursively browse a top level namespace
+   */
+  async browse(endpoint, nodeId) {
+    const session = this.sessions[endpoint];
+    this.sessions[endpoint].browseResult = {};
+    try {
+      const browseResult = await session.browse(nodeId);
+      const readResult = await session.read(nodeId);
+      this.sessions[endpoint].browseResult = Object.assign({}, browseResult, readResult);
+      return {
+        status: true,
+        msg: `Browse successful - ${nodeId} - ${endpoint}`,
+        data: this.sessions[endpoint].browseResult,
+      };
+    } catch (err) {
+      return {
+        status: false,
+        msg: `Error browsing - ${nodeId} - ${endpoint}`,
+        err,
+      };
+    }
+  }
+
+  /**
    * Monitor node or nodes
    */
   monitorNodes() {

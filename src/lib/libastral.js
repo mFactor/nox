@@ -18,4 +18,23 @@ const validateProp = (namespace, prop, value) => {
   return true;
 };
 
-export { validateProp };
+/**
+ * Checks connected server array, returns active server
+ * @param {object} opcua - Redux state
+ */
+const isServerActive = (opcua) => {
+  let endpoint = null;
+  const servers = Object.keys(opcua);
+
+  // If server is active, populate address space
+  servers.some((server) => {
+    if (opcua[server].isActive && opcua[server].isConnected) {
+      endpoint = server;
+      return true;
+    }
+    return false;
+  });
+  return endpoint;
+};
+
+export { validateProp, isServerActive };

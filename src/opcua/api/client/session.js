@@ -81,17 +81,35 @@ export default class UaSession {
    * Return JSON of address space references
    * If level is null, returns all forward references
    */
-  browse(browseDescription) {
+  browse(nodeId) {
     return new Promise((resolve, reject) => {
+      const browseDescription = [{
+        nodeId,
+        // referenceTypeId: Ua.resolveNodeId("Organizes"),
+        browseDirection: Ua.browse_service.BrowseDirection.Both,
+        includeSubtypes: true,
+      }];
       this.session.browse(browseDescription, (err, browseResults) => {
         if (err) {
           reject(`Browse failed`);
         }
         const next = [];
         browseResults[0].references.forEach((ref) => {
-          next.push(ref.typeDefinition.identiferType.toString());
+          // next.push(ref.typeDefinition.identiferType.toString());
+          next.push(ref);
         });
-        resolve(next);
+        resolve(next[0]);
+      });
+    });
+  }
+
+  read(nodeId) {
+    return new Promise((resolve, reject) => {
+      this.session.readVariableValue(nodeId, (err, value) => {
+        if (err) {
+          reject(`Read value failed`);
+        }
+        resolve(value);
       });
     });
   }

@@ -73,7 +73,7 @@ const opcua = (app, env, io) => {
     }
 
     // Browse
-    const result = await clients[req.sessionID].browse(req.body.endpoint);
+    const result = await clients[req.sessionID].browse(req.body.endpoint, req.body.nodeId);
     handleErr(result, req, res, next);
     req[env.NAMESPACE].log.server('info', `${result.msg}`);
 

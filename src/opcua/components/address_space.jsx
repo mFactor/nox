@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Tree, Input } from 'antd';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import { validateProp } from 'lib/libastral';
+import { isServerActive } from 'lib/libastral';
 import style from 'opcua/less/address_space';
 import { log } from 'base/action.jsx';
 import * as nox from 'opcua/action.jsx';
@@ -24,6 +24,9 @@ const mapDispatchToProps = (dispatch) => ({
   disconnect: (endpoint) => {
     dispatch(nox.disconnect(endpoint));
   },
+  browse: (endpoint, nodeId) => {
+    dispatch(nox.browse(endpoint, nodeId));
+  },
 });
 
 @withStyles(style)
@@ -32,12 +35,14 @@ export default class AddressSpace extends React.Component {
 
   static propTypes = {
     opcua: React.PropTypes.object.isRequired,
+    browse: React.PropTypes.func.isRequired,
   }
 
   constructor() {
     super();
     this.state = {
-      addrSpace: null,
+      endpoint: null,
+      addressSpaceTree: null,
     };
     this.nodes = [];
   }
@@ -47,40 +52,46 @@ export default class AddressSpace extends React.Component {
   }
 
   /**
-   *
+   * Update component on Redux store update
    */
   componentWillReceiveProps(nextProps) {
-    const servers = Object.keys(nextProps.opcua);
+    const endpoint = isServerActive(nextProps.opcua);
 
     // If server is active, populate address space
-    let addrSpace = null;
-    servers.forEach((server) => {
-      if (nextProps.opcua[server].isActive && nextProps.opcua[server].isConnected) {
-        const innerSpace = this.populate(nextProps.opcua[server].addressSpace);
-        addrSpace = (
-          <Tree
-            defaultExpandAll
-            onSelect={this.onSelect}
-          >
-            {innerSpace}
-          </Tree>
-        );
-      }
-    });
+    let addressSpaceTree = null;
+    if (endpoint) {
+      const innerTree = this.traverseSpace(nextProps.opcua[endpoint].addressSpace);
+      addressSpaceTree = (
+        <Tree
+          defaultExpandAll
+          onSelect={this.onSelect}
+        >
+          {innerTree}
+        </Tree>
+      );
+    }
     this.setState({
-      addrSpace,
+      endpoint,
+      addressSpaceTree,
     });
+  }
+
+  /**
+   * Browse selected node on click (Ant called it on select for some reason...)
+   */
+  onSelect = (selectedKeys, info) => {
+    this.props.browse(this.state.endpoint, selectedKeys[0]);
   }
 
   /**
    * Build address space UI tree
    * TODO: Prevent infinite recursion somehow, maybe level tracking limit
    */
-  populate = (addressSpace) => {
+  traverseSpace = (addressSpace) => {
     const tmpNodes = [];
     addressSpace.forEach((iter) => {
       if (iter.organizes) {
-        const nextNodes = this.populate(iter.organizes);
+        const nextNodes = this.traverseSpace(iter.organizes);
         if (nextNodes.length > 0) {
           tmpNodes.push(
             <TreeNode title={iter.browseName} key={iter.nodeId}>
@@ -102,18 +113,10 @@ export default class AddressSpace extends React.Component {
     return tmpNodes;
   }
 
-  /**
-   * Browse selected node
-   */
-  onSelect = (selectedKeys, info) => {
-    console.log(selectedKeys);
-  }
-
-
   render() {
     return (
       <div>
-        {this.state.addrSpace}
+        {this.state.addressSpaceTree}
       </div>
     );
   }

@@ -11,11 +11,25 @@ const opcua = (state = {}, action) => {
           isConnected: action.status,
           isActive: action.active,
           addressSpace: [action.addressSpace],
-          browseResults: null,
+          browseResult: null,
           subscriptions: {},
           msg: action.msg,
         },
       };
+    case 'UPDATE_BROWSE': {
+      const session = {
+        ...state,
+      };
+      session[action.endpoint].browseResult = action.browseResult;
+      return session;
+    }
+    case 'UPDATE_ACTIVE': {
+      const session = {
+        ...state,
+      };
+      session[action.endpoint].isActive = action.active;
+      return session;
+    }
     default:
       return state;
   }

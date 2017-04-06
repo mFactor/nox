@@ -3,7 +3,12 @@
 
 ## Installation
 
+
 ## Usage
+
+### Web client
+
+### Electron
 
 ## Design
 As a generic OpcUa client, Nox needs to accomplish the following
@@ -22,3 +27,6 @@ As an enhanced client, some epic features would include
 ## Structure
 
 ## Contributing
+
+### To Do
+* Saga middleware to validate server is connected on secondary requests

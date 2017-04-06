@@ -5,6 +5,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { log } from 'base/action.jsx';
 import style from 'app/less/home';
 import AddressSpace from 'opcua/components/address_space.jsx';
+import BrowseNode from 'opcua/components/browse_node.jsx';
 
 const { Content, Sider } = Layout;
 
@@ -50,8 +51,7 @@ export default class Home extends React.Component {
           Home content
         </Content>
         <Sider>
-          Node properties
-          Node actions
+          <BrowseNode />
         </Sider>
       </Layout>
     );

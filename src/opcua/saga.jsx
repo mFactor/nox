@@ -71,14 +71,16 @@ function* disconnect(action) {
 }
 
 /**
- * Log message on server
+ * Browse server for node
  */
 function* browse(action) {
   const json = yield fetchAsync(`/opcua/api/browse`, action);
-  if (json && (action.level !== 'error')) {
+  if (json) {
     yield put({
-      type: 'STATUS',
-      status: 'OK',
+      type: 'UPDATE_BROWSE',
+      endpoint: action.endpoint,
+      status: json.status,
+      browseResult: json.data,
     });
   } else {
     yield put({
