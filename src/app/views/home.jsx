@@ -44,7 +44,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <Layout>
-        <Sider>
+        <Sider width={300} style={{ background: '#fff', height: '100%', overflow: 'auto' }}>
           <AddressSpace />
         </Sider>
         <Content>

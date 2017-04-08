@@ -61,14 +61,19 @@ export default class AddressSpace extends React.Component {
     let addressSpaceTree = null;
     if (endpoint) {
       const innerTree = this.traverseSpace(nextProps.opcua[endpoint].addressSpace);
+      addressSpaceTree = innerTree;
+      /*
       addressSpaceTree = (
         <Tree
-          defaultExpandAll
+          showLine={true}
+          showIcon={true}
+          defaultExpandedKeys={['ns=1;i=85']}
           onSelect={this.onSelect}
         >
           {innerTree}
         </Tree>
       );
+      */
     }
     this.setState({
       endpoint,
@@ -116,7 +121,14 @@ export default class AddressSpace extends React.Component {
   render() {
     return (
       <div>
-        {this.state.addressSpaceTree}
+        <Tree
+          showLine
+          showIcon
+          defaultExpandedKeys={['ns=0;i=85']}
+          onSelect={this.onSelect}
+        >
+          {this.state.addressSpaceTree}
+        </Tree>
       </div>
     );
   }
