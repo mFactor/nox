@@ -1,31 +1,25 @@
-class UaSubscription {
-  constructor() {
-    this.subscription = null;
+import Ua from 'node-opcua';
+
+export default class UaSubscription {
+  constructor(session) {
+    this.session = session;
+    // this.eventBus = eventBus;
     this.opts = {
-
-    };
-
-  }
-
-  /**
-   * Create subscription
-   */
-  createSubscription() {
-    this.subscription = new opcua.ClientSubscription(this.session, {
-      requestedPublishingInterval: 1000,
+      requestedPublishingInterval: 100,
       requestedLifetimeCount: 10,
       requestedMaxKeepAliveCount: 2,
       maxNotificationsPerPublish: 10,
       publishingEnabled: true,
       priority: 10,
-    });
-
+    };
+    this.subscription = new Ua.ClientSubscription(this.session, this.opts);
+    this.id = this.subscription.subscriptionId;
     this.subscription.on('started', () => {
-      console.log(`subscriptionId=${this.subscription.subscriptionId}`);
+      // console.log(`subscriptionId=${this.subscription.subscriptionId}`);
     }).on('keepalive', () => {
-      console.log('keepalive');
+      // console.log('keepalive');
     }).on('terminated', () => {
-      callback();
+      // console.log('terminated');
     });
   }
 
@@ -46,15 +40,36 @@ class UaSubscription {
   /**
    * Create monitored items
    */
-  createMonitoredItems() {
+  monitor(nodeId) {
+    return new Promise((resolve, reject) => {
+      if (!nodeId) {
+        reject(`No nodeId to monitor`);
+      }
+      const monitoredItem = this.subscription.monitor({
+        nodeId: Ua.resolveNodeId(nodeId),
+        attributeId: Ua.AttributeIds.Value,
+      }, {
+        samplingInterval: 100,
+        discardOldest: true,
+        queueSize: 10,
+      }, Ua.read_service.TimestampsToReturn.Both);
 
+      // handle data change
+      monitoredItem.on('changed', (dataValue) => {
+        // console.log("value: ", dataValue.value.value);
+      });
+      resolve(`Monitoring done`);
+    });
   }
 
   /**
-   * Create monitored items
+   * Delete monitored items
+   * This functionality is not yet implemented in node-opcua
+   * In talks with @erossignon about a patch
+   * For now call deleteSubscription
    */
-  deleteMonitoredItems() {
-
+  deleteMonitoredItem(nodeId) {
+    return false;
   }
 
 }

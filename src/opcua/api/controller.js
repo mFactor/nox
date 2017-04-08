@@ -15,6 +15,8 @@ const clients = {};
  * @param {object} app - Express app object
  * @param {object} env - process.ENV ref
  * @param {object} io - Connected socketIO ref
+ *
+ * Note: req.sessionID is the user session from browser, NOT Ua related.
  */
 const opcua = (app, env, io) => {
   const router = Router();
@@ -30,13 +32,13 @@ const opcua = (app, env, io) => {
 
     // Connect
     result = await clients[req.sessionID].connect(req.body.endpoint);
-    handleErr(result, req, res, next);
-    req[env.NAMESPACE].log.server('info', `${result.msg}`);
+    noxLog(result, req);
 
     // Get address space
-    result = await clients[req.sessionID].crawlDomain(req.body.endpoint);
-    handleErr(result, req, res, next);
-    req[env.NAMESPACE].log.server('info', `${result.msg}`);
+    if (result.status === true) {
+      result = await clients[req.sessionID].crawlDomain(req.body.endpoint);
+      noxLog(result, req);
+    }
 
     // Send result
     res.json(result);
@@ -55,8 +57,7 @@ const opcua = (app, env, io) => {
     // Disconenct
     const result = await clients[req.sessionID].disconnect(req.body.endpoint);
     delete clients[req.sessionID];
-    handleErr(result, req, res, next);
-    req[env.NAMESPACE].log.server('info', `${result.msg}`);
+    noxLog(result, req);
 
     // Send result
     res.json(result);
@@ -74,8 +75,51 @@ const opcua = (app, env, io) => {
 
     // Browse
     const result = await clients[req.sessionID].browse(req.body.endpoint, req.body.nodeId);
-    handleErr(result, req, res, next);
-    req[env.NAMESPACE].log.server('info', `${result.msg}`);
+    noxLog(result, req);
+
+    // Send result
+    res.json(result);
+    next();
+  });
+
+  /**
+   * Monitor nodes
+   */
+  router.post('/monitor', async (req, res, next) => {
+    // Check validity
+    if (!clients[req.sessionID]) {
+      res.sendStatus(204);
+    }
+
+    // Check for active subscription
+    let result = clients[req.sessionID].validateSubscription(req.body.endpoint,
+                                                             req.body.subscriptionId);
+    if (!result.status) {
+      result = await clients[req.sessionID].subscribe(req.body.endpoint);
+      noxLog(result, req);
+    }
+
+    if (result.status) {
+      result = await clients[req.sessionID].monitor(req.body.endpoint, req.body.nodeId);
+    }
+
+    // Send result
+    res.json(result);
+    next();
+  });
+
+  /**
+   * Unmonitor nodes
+   */
+  router.post('/unmonitor', async (req, res, next) => {
+    // Check validity
+    if (!clients[req.sessionID]) {
+      res.sendStatus(204);
+    }
+
+    // Browse
+    const result = await clients[req.sessionID].unmonitor(req.body.endpoint, req.body.nodeId);
+    noxLog(result, req);
 
     // Send result
     res.json(result);
@@ -98,12 +142,12 @@ const opcua = (app, env, io) => {
   /**
    * Router error handler
    */
-  function handleErr(result, req, res, next) {
+  function noxLog(result, req) {
     if (!result.status) {
       req[env.NAMESPACE].log.server('error', `${result.msg}`);
-      res.sendStatus(500);
-      next();
+      return;
     }
+    req[env.NAMESPACE].log.server('info', `${result.msg}`);
   }
 
   noxIo.on('connection', (socket) => {

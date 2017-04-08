@@ -3,7 +3,6 @@
 
 ## Installation
 
-
 ## Usage
 
 ### Web client
@@ -27,6 +26,9 @@ As an enhanced client, some epic features would include
 ## Structure
 
 ## Contributing
+We're pushing towards a V1 that will include basic client functionality
+including connection management, address space browsing, and subscriptions.
+
 
 ### To Do
 * Saga middleware to validate server is connected on secondary requests

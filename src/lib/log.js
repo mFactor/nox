@@ -55,7 +55,7 @@ const sysLog = new winston.Logger({
 });
 
 /**
- *
+ * Log file
  */
 class Log {
   constructor(req) {
@@ -79,7 +79,9 @@ class Log {
   }
 
   print() {
-    sysLog[this.entry.level](this.entry);
+    if (this.entry.level) {
+      sysLog[this.entry.level](this.entry);
+    }
   }
 
   /**

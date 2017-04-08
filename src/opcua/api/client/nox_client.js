@@ -12,6 +12,7 @@ export default class NoxClient {
 
   /**
    * Create session and connect to endpoint
+   * @param {string} endpoint - UA server connection endpoint
    */
   async connect(endpoint) {
     const session = new UaSession(this.eventBus);
@@ -36,6 +37,7 @@ export default class NoxClient {
 
   /**
    * Disconnect from endpoint
+   * @param {string} endpoint - UA server connection endpoint
    */
   async disconnect(endpoint) {
     const session = this.sessions[endpoint];
@@ -59,6 +61,7 @@ export default class NoxClient {
 
   /**
    * Recursively browse a top level namespace
+   * @param {string} endpoint - UA server connection endpoint
    */
   async crawlDomain(endpoint) {
     const session = this.sessions[endpoint];
@@ -80,6 +83,8 @@ export default class NoxClient {
 
   /**
    * Recursively browse a top level namespace
+   * @param {string} endpoint - UA server connection endpoint
+   * @param {string} nodeId - UA server node ID
    */
   async browse(endpoint, nodeId) {
     const session = this.sessions[endpoint];
@@ -103,13 +108,70 @@ export default class NoxClient {
   }
 
   /**
-   * Monitor node or nodes
+   * Subscribe to session
+   * @param {string} endpoint - UA server connection endpoint
    */
-  monitorNodes() {
-
+  async subscribe(endpoint) {
+    const session = this.sessions[endpoint];
+    try {
+      const result = await session.subscribe(endpoint);
+      return {
+        status: true,
+        msg: `Subscribe successful - ${endpoint}`,
+        data: result,
+      };
+    } catch (err) {
+      return {
+        status: false,
+        msg: `Error subscribing - ${endpoint}`,
+        err,
+      };
+    }
   }
 
-  unmonitorNodes() {
+  /**
+   * Check for valid subscription
+   * @param {string} endpoint - UA server connection endpoint
+   */
+  validateSubscription(endpoint, subscriptionId) {
+    const session = this.sessions[endpoint];
+    if (!session.subscription) {
+      return {
+        status: false,
+        msg: `No subscription found at - ${endpoint}`,
+      };
+    }
+    if (session.subscription.id !== subscriptionId) {
+      return {
+        status: false,
+        msg: `Invalid subscription at - ${endpoint} - ${subscriptionId}`,
+      };
+    }
+    return {
+      status: true,
+      msg: `Valid subscription at - ${endpoint} - ${subscriptionId}`,
+    };
+  }
 
+  /**
+   * Monitor node
+   * @param {string} endpoint - UA server connection endpoint
+   */
+  async monitor(endpoint, nodeId) {
+    const session = this.sessions[endpoint];
+    try {
+      const result = await session.subscription.monitor(nodeId);
+      return {
+        status: true,
+        msg: `Monitor successful - ${nodeId}`,
+        data: result,
+      };
+    } catch (err) {
+      return {
+        status: false,
+        msg: `Error monitoring - ${nodeId}`,
+        err,
+      };
+    }
   }
 }

@@ -1,22 +1,28 @@
 import Ua from 'node-opcua';
-import BrowseService from 'node-opcua/lib/services/browse_service';
+import UaSubscription from 'opcua/api/client/subscription';
+// import BrowseService from 'node-opcua/lib/services/browse_service';
 
 /**
  * Internal interface to Node OPCUA SDK
  */
 export default class UaSession {
 
+  /**
+   * Constructor
+   * @param {object} eventBus - Nox client
+   */
   constructor(eventBus) {
     this.opts = {
       keepSessionAlive: true,
     };
     this.client = new Ua.OPCUAClient(this.opts);
     this.crawler = null;
+    this.subscription = null;
     this.eventBus = eventBus;
   }
 
   /**
-   * Connect to UaSession
+   * Connect to server
    */
   connect(endpoint) {
     return new Promise((resolve, reject) => {
@@ -31,7 +37,7 @@ export default class UaSession {
   }
 
   /**
-   * Disconnect from UaSession
+   * Disconnect from server
    */
   disconnect() {
     return new Promise((resolve, reject) => {
@@ -45,7 +51,7 @@ export default class UaSession {
   }
 
   /**
-   * Create Session to Server
+   * Create server session
    */
   createSession() {
     return new Promise((resolve, reject) => {
@@ -61,7 +67,7 @@ export default class UaSession {
   }
 
   /**
-   * Browse
+   * Delete server session
    */
   deleteSession() {
     return new Promise((resolve, reject) => {
@@ -103,6 +109,9 @@ export default class UaSession {
     });
   }
 
+  /**
+   * Read node variable value
+   */
   read(nodeId) {
     return new Promise((resolve, reject) => {
       this.session.readVariableValue(nodeId, (err, value) => {
@@ -131,6 +140,17 @@ export default class UaSession {
   }
 
   /**
+   * Create new subscription
+   */
+  subscribe() {
+    return new Promise((resolve, reject) => {
+      this.subscription = new UaSubscription(this.session);
+      // console.log(this.subscription);
+      resolve(true);
+    });
+  }
+
+  /**
    * Method call
    */
   call() {
@@ -142,5 +162,12 @@ export default class UaSession {
         resolve(callResponse);
       });
     });
+  }
+
+  /**
+   * Delete subscription
+   */
+  unsubscribe() {
+    this.subscription = null;
   }
 }
