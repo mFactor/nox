@@ -9,11 +9,8 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 const { Header } = Layout;
 
-const mapStateToProps = (state) => {
-  return {
-
-  };
-};
+const mapStateToProps = (state) => ({
+});
 
 const mapDispatchToProps = (dispatch) => ({
   log: (msg, level) => {
@@ -44,7 +41,7 @@ export default class Navbar extends React.Component {
       <Header className="navbar-header">
         <Row>
           <Col span={4}>
-            Nox OPCUA Clients suck ass
+            mFactor OPCUA
           </Col>
           <Col span={6} offset={14}>
             <Menu
@@ -53,16 +50,16 @@ export default class Navbar extends React.Component {
               mode="horizontal"
               theme="light"
             >
-              <Menu.Item key="mail">
-                <Icon type="mail" />
-                Home
+              <Menu.Item key="client">
+                <Icon type="laptop" />
+                UA Client
               </Menu.Item>
-              <Menu.Item key="performance">
-                <Icon type="appstore" />
-                Performance
+              <Menu.Item key="graphics">
+                <Icon type="dot-chart" />
+                Graphics
               </Menu.Item>
               <Menu.Item key="about">
-                <Icon type="appstore" />
+                <Icon type="info-circle-o" />
                 About
               </Menu.Item>
             </Menu>

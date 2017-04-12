@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Tree, Input } from 'antd';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import { isServerActive } from 'lib/libastral';
+import { isServerConnected } from 'lib/libastral';
 import style from 'opcua/less/address_space';
 import { log } from 'base/action.jsx';
 import * as nox from 'opcua/action.jsx';
@@ -55,9 +55,9 @@ export default class AddressSpace extends React.Component {
    * Update component on Redux store update
    */
   componentWillReceiveProps(nextProps) {
-    const endpoint = isServerActive(nextProps.opcua);
+    const endpoint = isServerConnected(nextProps.opcua);
 
-    // If server is active, populate address space
+    // If server is connected, populate address space
     let addressSpaceTree = null;
     if (endpoint) {
       const innerTree = this.traverseSpace(nextProps.opcua[endpoint].addressSpace);
@@ -124,6 +124,7 @@ export default class AddressSpace extends React.Component {
         <Tree
           showLine
           showIcon
+          checkable
           defaultExpandedKeys={['ns=0;i=85']}
           onSelect={this.onSelect}
         >

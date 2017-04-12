@@ -27,7 +27,7 @@ const moduleLoad = (routes) => {
   // Front-end routing
   render(
     <Provider store={store}>
-      <IsoStyle onInsertCss={styles => styles._insertCss()}>
+      <IsoStyle onInsertCss={(styles) => styles._insertCss()}>
         <Router routes={routes} history={browserHistory} />
       </IsoStyle>
     </Provider>,

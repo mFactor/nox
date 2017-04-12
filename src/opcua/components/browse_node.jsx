@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Tree, Input } from 'antd';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import { isServerActive } from 'lib/libastral';
+import { isServerConnected } from 'lib/libastral';
 import style from 'opcua/less/browse_node';
 import { log } from 'base/action.jsx';
 import * as nox from 'opcua/action.jsx';
@@ -41,7 +41,7 @@ export default class BrowseNode extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const endpoint = isServerActive(nextProps.opcua);
+    const endpoint = isServerConnected(nextProps.opcua);
 
     let browseTree = null;
     if (endpoint) {

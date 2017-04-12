@@ -1,30 +1,30 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Menu, Dropdown, Button, Row, Col, Icon } from 'antd';
+import { Menu, Dropdown, Button, Row, Col, Icon, Radio, Layout } from 'antd';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { log } from 'base/action.jsx';
+import { isServerActive } from 'lib/libastral';
 import * as nox from 'opcua/action.jsx';
 import style from 'opcua/less/rig';
 import Settings from 'opcua/components/settings.jsx';
 
-const mapStateToProps = (state) => {
-  return {
-  };
-};
+const { Header } = Layout;
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    log: (msg, level) => {
-      dispatch(log(msg, level));
-    },
-    connect: (endpoint) => {
-      dispatch(nox.connect(endpoint));
-    },
-    disconnect: (endpoint) => {
-      dispatch(nox.disconnect(endpoint));
-    },
-  };
-};
+const mapStateToProps = (state) => ({
+  opcua: state.opcua,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  log: (msg, level) => {
+    dispatch(log(msg, level));
+  },
+  connect: (endpoint) => {
+    dispatch(nox.connect(endpoint));
+  },
+  disconnect: (endpoint) => {
+    dispatch(nox.disconnect(endpoint));
+  },
+});
 
 /**
  * Base (or root) component for application
@@ -34,6 +34,7 @@ const mapDispatchToProps = (dispatch) => {
 export default class Rig extends Component {
   static propTypes = {
     // log: React.PropTypes.func.isRequired,
+    opcua: React.PropTypes.object.isRequired,
     connect: React.PropTypes.func.isRequired,
     disconnect: React.PropTypes.func.isRequired,
   }
@@ -41,47 +42,86 @@ export default class Rig extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sessions: '',
-      endpoint: 'opc.tcp://mfactorengineering.com:4840',
-      menu: (
-        <Menu onClick={null}>
-          <Menu.Item key="1">1st menu item</Menu.Item>
-          <Menu.Item key="2">2nd menu item</Menu.Item>
-          <Menu.Item key="3">3d menu item</Menu.Item>
-        </Menu>
+      endpoint: isServerActive(this.props.opcua),
+      loading: false,
+      settings: (
+        <Settings ref={(settings) => { this.settings = settings; }} />
       ),
+      contextMenu: [],
     };
+    Object.keys(this.props.opcua).forEach((server) => {
+      this.state.contextMenu.push(
+        <Menu.Item key="1">1st menu item</Menu.Item>,
+      );
+    });
   }
 
-  componentDidMount() {
+  componentWillReceiveProps(nextProps) {
+    const endpoint = isServerActive(nextProps.opcua);
+
+    if (endpoint) {
+      // Show connected endpoint
+      this.setState({
+        endpoint,
+        loading: false,
+      });
+    }
   }
 
-  handleClick = (err) => {
-    this.settings.showModal();
+  handleRigAction = (action) => {
+    switch (action) {
+      case 'connect':
+        this.props.connect(this.state.endpoint);
+        this.setState({
+          loading: true,
+        });
+        break;
+      case 'disconnect':
+        this.props.disconnect(this.state.endpoint);
+        break;
+      case 'settings':
+        this.settings.showModal();
+        break;
+      default:
+        break;
+    }
+  }
+
+  handleContextChange = () => {
+    console.log('test');
   }
 
   render() {
+    const renderMenu = (
+      <Menu onClick={this.handleContextChange}>
+        {this.state.contextMenu}
+      </Menu>
+    );
     return (
-      <div>
-        <Row align="bottom" justify="space-around">
-          <div className="rig">
-            <Col span={24}>
-              <ul className="tools">
-                <li onClick={() => this.props.connect(this.state.endpoint)}>
-                  <a><Icon type="plus" /></a>
-                </li>
-                <li onClick={() => this.props.disconnect(this.state.endpoint)}>
-                  <a><Icon type="minus" /></a>
-                </li>
-                <li><a><Icon type="key" /></a></li>
-                <li><a><Icon type="disconnect" /></a></li>
-                <li onClick={() => this.handleClick()}><a><Icon type="setting" /></a></li>
-              </ul>
-            </Col>
-          </div>
+      <Header className="rig-header">
+        <Row type="flex" justify="start" align="middle">
+          <Col span={4}>
+            <div className="rig">
+              <Button.Group>
+                <Button loading={this.state.loading} icon="key" onClick={() => this.handleRigAction('connect')}>
+                  Connect
+                </Button>
+                <Button icon="disconnect" onClick={() => this.handleRigAction('disconnect')}>
+                  Disconnect
+                </Button>
+              </Button.Group>
+            </div>
+          </Col>
+          <Col span={4}>
+            <div className="rig">
+              <Dropdown.Button onClick={() => this.handleRigAction('settings')} overlay={renderMenu}>
+                {this.state.endpoint}
+              </Dropdown.Button>
+            </div>
+          </Col>
         </Row>
-        <Settings ref={(settings) => { this.settings = settings; }} />
-      </div>
+        {this.state.settings}
+      </Header>
     );
   }
 }

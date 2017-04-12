@@ -140,17 +140,6 @@ export default class UaSession {
   }
 
   /**
-   * Create new subscription
-   */
-  subscribe() {
-    return new Promise((resolve, reject) => {
-      this.subscription = new UaSubscription(this.session);
-      // console.log(this.subscription);
-      resolve(true);
-    });
-  }
-
-  /**
    * Method call
    */
   call() {
@@ -165,9 +154,26 @@ export default class UaSession {
   }
 
   /**
+   * Create new subscription
+   */
+  subscribe(endpoint) {
+    return new Promise((resolve, reject) => {
+      this.subscription = new UaSubscription(endpoint, this.session, this.eventBus);
+      resolve(true);
+    });
+  }
+
+  /**
    * Delete subscription
    */
   unsubscribe() {
     this.subscription = null;
+  }
+
+  subscriptionHandler() {
+    // Subscription eventBus handler
+    this.eventBus.on(`/subscription/${endpoint}`, (msg) => {
+      this.eventBus.emit('');
+    });
   }
 }

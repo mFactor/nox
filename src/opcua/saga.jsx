@@ -97,8 +97,50 @@ function* subscribe(action) {
   const json = yield fetchAsync(`/opcua/api/subscribe`, action);
   if (json && (action.level !== 'error')) {
     yield put({
+      type: 'UPDATE_SUBSCRIPTION',
+      endpoint: action.endpoint,
+      status: json.status,
+    });
+  } else {
+    yield put({
       type: 'STATUS',
-      status: 'OK',
+      status: 'ERR',
+    });
+  }
+}
+
+/**
+ * Log message on server
+ */
+function* monitor(action) {
+  const json = yield fetchAsync(`/opcua/api/monitor`, action);
+  if (json && (action.level !== 'error')) {
+    yield put({
+      type: 'UPDATE_SUBSCRIPTION',
+      endpoint: action.endpoint,
+      status: json.status,
+      nodeId: action.nodeId,
+      data: json.data,
+    });
+  } else {
+    yield put({
+      type: 'STATUS',
+      status: 'ERR',
+    });
+  }
+}
+
+/**
+ * Log message on server
+ */
+function* unmonitor(action) {
+  const json = yield fetchAsync(`/opcua/api/unmonitor`, action);
+  if (json && (action.level !== 'error')) {
+    yield put({
+      type: 'UPDATE_SUBSCRIPTION',
+      endpoint: action.endpoint,
+      status: json.status,
+      nodeId: action.nodeId,
     });
   } else {
     yield put({
@@ -113,7 +155,12 @@ function* listen() {
   const channel = yield call(socketHandler, socket);
   for (;;) {
     const payload = take(channel);
-    yield put({ test: payload });
+    yield put({
+      type: 'UPDATE_SUBSCRIPTION',
+      endpoint: payload.endpoint,
+      status: payload.status,
+      data: payload.data,
+    });
   }
 }
 
@@ -122,5 +169,7 @@ export default function* opcua() {
   yield takeLatest('DISCONNECT', disconnect);
   yield takeLatest('BROWSE', browse);
   yield takeLatest('SUBSCRIBE', subscribe);
+  yield takeLatest('MONITOR', monitor);
+  yield takeLatest('UNMONITOR', unmonitor);
   yield takeLatest('LISTEN', listen);
 }

@@ -3,17 +3,52 @@ import { Modal, Row, Col, Menu, Icon } from 'antd';
 
 const SubMenu = Menu.SubMenu;
 
+/**
+ * Settings component for Nox
+ */
 export default class Settings extends Component {
-
   constructor(props) {
     super(props);
+    // Note that the servers are here as defaults
+    // The ability to add, remove, and edit will happen here, as well as security selection
     this.state = {
       visible: false,
+      servers: [
+        {
+          name: 'Hannover Demo',
+          endpoint: 'opc.tcp://mfactorengineering.com:4840',
+          active: false,
+          disconnected: true,
+        },
+        {
+          name: 'EVR2 Simulation',
+          endpoint: 'opc.tcp://mfactorengineering.com:4840',
+          active: true,
+          disconnected: true,
+        },
+      ],
+      subMenus: [],
     };
-  }
 
-  addServer = (name, endpoint) => {
-
+    this.state.servers.forEach((server) => {
+      const title = (
+        <span>
+          <Icon type="api" />
+          <span>{`${server.name}`}</span>
+        </span>
+      );
+      this.state.subMenus.push(
+        <SubMenu
+          key={server.name}
+          title={title}
+        >
+          <Menu.Item key={`${server.name}_edit`}>
+            <Icon type="edit" />
+            Edit
+          </Menu.Item>
+        </SubMenu>,
+      );
+    });
   }
 
   showModal = () => {
@@ -51,32 +86,14 @@ export default class Settings extends Component {
               <Menu
                 style={{ width: `240px` }}
                 mode="inline"
+                defaultOpenKeys={[this.state.servers[0].name]}
+                defaultSelectedKeys={[`${this.state.servers[0].name}_edit`]}
               >
-                <SubMenu
-                  key="sub1"
-                  title={<span>
-                    <Icon type="api" />
-                    <span>{`EVR2 Server`}</span>
-                  </span>
-                        }
-                >
-        <Menu.Item key="1">Edit</Menu.Item>
-                </SubMenu>
-                <SubMenu
-                  key="sub2"
-                  title={
-                    <span>
-                      <Icon type="api" />
-                      <span>{`ITW Elgin`}</span>
-                    </span>
-                        }
-                >
-        <Menu.Item key="5">Edit</Menu.Item>
-                </SubMenu>
+                {this.state.subMenus}
               </Menu>
             </Col>
             <Col span={16}>
-              <p>some content...</p>
+              <p>Edit server</p>
             </Col>
           </Row>
         </Modal>

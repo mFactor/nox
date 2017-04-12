@@ -50,7 +50,7 @@ export default class Home extends React.Component {
         <Content>
           Home content
         </Content>
-        <Sider>
+        <Sider style={{ background: '#fff', height: '100%', overflow: 'auto' }}>
           <BrowseNode />
         </Sider>
       </Layout>

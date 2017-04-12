@@ -151,7 +151,12 @@ const opcua = (app, env, io) => {
   }
 
   noxIo.on('connection', (socket) => {
-    console.log(socket.id);
+    console.log(socket);
+    /*
+    socket.on('', () => {
+
+    });
+    */
   });
 
   // Browse node

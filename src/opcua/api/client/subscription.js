@@ -1,9 +1,10 @@
 import Ua from 'node-opcua';
 
 export default class UaSubscription {
-  constructor(session) {
+  constructor(endpoint, session, eventBus) {
+    this.endpoint = endpoint;
     this.session = session;
-    // this.eventBus = eventBus;
+    this.eventBus = eventBus;
     this.opts = {
       requestedPublishingInterval: 100,
       requestedLifetimeCount: 10,
@@ -14,12 +15,25 @@ export default class UaSubscription {
     };
     this.subscription = new Ua.ClientSubscription(this.session, this.opts);
     this.id = this.subscription.subscriptionId;
+
+    // Subscription event bus
     this.subscription.on('started', () => {
-      // console.log(`subscriptionId=${this.subscription.subscriptionId}`);
+      this.eventHub.emit(`/subscription`, {
+        id: this.id,
+        status: true,
+        msg: 'Subscription started',
+        data: '',
+      });
     }).on('keepalive', () => {
-      // console.log('keepalive');
+      this.eventHub.emit(`/subscription/heartbeat`, {
+        status: true,
+      });
     }).on('terminated', () => {
-      // console.log('terminated');
+      this.eventHub.emit(`/endpoint/subscription`, {
+        status: '',
+        msg: '',
+        data: '',
+      });
     });
   }
 
@@ -56,7 +70,7 @@ export default class UaSubscription {
 
       // handle data change
       monitoredItem.on('changed', (dataValue) => {
-        // console.log("value: ", dataValue.value.value);
+
       });
       resolve(`Monitoring done`);
     });
