@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Menu, Dropdown, Button, Row, Col, Icon, Radio, Layout } from 'antd';
+import { Menu, Dropdown, Row, Col, Icon, Layout } from 'antd';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { log } from 'base/action.jsx';
 import { isServerActive } from 'lib/libastral';
@@ -98,26 +98,41 @@ export default class Rig extends Component {
       </Menu>
     );
     return (
-      <Header className="rig-header">
+      <Header className="rig">
         <Row type="flex" justify="start" align="middle">
-          <Col span={4}>
-            <div className="rig">
-              <Button.Group>
-                <Button loading={this.state.loading} icon="key" onClick={() => this.handleRigAction('connect')}>
-                  Connect
-                </Button>
-                <Button icon="disconnect" onClick={() => this.handleRigAction('disconnect')}>
-                  Disconnect
-                </Button>
-              </Button.Group>
-            </div>
-          </Col>
-          <Col span={4}>
-            <div className="rig">
-              <Dropdown.Button onClick={() => this.handleRigAction('settings')} overlay={renderMenu}>
-                {this.state.endpoint}
-              </Dropdown.Button>
-            </div>
+          <Col
+            sm={{ span: 24 }}
+            lg={{ span: 24 }}
+            xl={{ span: 24 }}
+          >
+            <ul className="rig-header">
+              <li>
+                <a onClick={() => this.handleRigAction('connect')}>
+                  Connect{` `}
+                  <Icon type="link" />
+                </a>
+              </li>
+              <li>
+                <a onClick={() => this.handleRigAction('disconnect')}>
+                  Disconnect{` `}
+                  <Icon type="link" />
+                </a>
+              </li>
+              <li>
+                <a onClick={() => this.handleRigAction('disconnect')}>
+                  Settings{` `}
+                  <Icon type="setting" />
+                </a>
+              </li>
+              <li>
+                <Dropdown onClick={() => this.handleRigAction('settings')} overlay={renderMenu}>
+                  <a>
+                    {this.state.endpoint}{`  `}
+                    <Icon type="down" />
+                  </a>
+                </Dropdown>
+              </li>
+            </ul>
           </Col>
         </Row>
         {this.state.settings}

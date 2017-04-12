@@ -39,11 +39,19 @@ export default class Navbar extends React.Component {
   render() {
     return (
       <Header className="navbar-header">
-        <Row>
-          <Col span={4}>
+        <Row type="flex" justify="start" align="middle">
+          <Col
+            sm={{ span: 4 }}
+            lg={{ span: 4 }}
+            xl={{ span: 4 }}
+          >
             mFactor OPCUA
           </Col>
-          <Col span={6} offset={14}>
+          <Col
+            sm={{ span: 20 }}
+            lg={{ span: 20 }}
+            xl={{ span: 20 }}
+          >
             <Menu
               onClick={this.handleClick}
               selectedKeys={[this.state.current]}

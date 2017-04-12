@@ -6,6 +6,7 @@
 ## Usage
 
 ### Web client
+There are two connectors that act as pseudo-APIs to the OpcUa client.
 
 ### Electron
 
