@@ -27,6 +27,12 @@ const mapDispatchToProps = (dispatch) => ({
   browse: (endpoint, nodeId) => {
     dispatch(nox.browse(endpoint, nodeId));
   },
+  monitor: (endpoint, nodeId) => {
+    dispatch(nox.monitor(endpoint, nodeId));
+  },
+  unmonitor: (endpoint, nodeId) => {
+    dispatch(nox.unmonitor(endpoint, nodeId));
+  },
 });
 
 @withStyles(style)
@@ -36,6 +42,8 @@ export default class AddressSpace extends React.Component {
   static propTypes = {
     opcua: React.PropTypes.object.isRequired,
     browse: React.PropTypes.func.isRequired,
+    monitor: React.PropTypes.func.isRequired,
+    unmonitor: React.PropTypes.func.isRequired,
   }
 
   constructor() {
@@ -62,18 +70,6 @@ export default class AddressSpace extends React.Component {
     if (endpoint) {
       const innerTree = this.traverseSpace(nextProps.opcua[endpoint].addressSpace);
       addressSpaceTree = innerTree;
-      /*
-      addressSpaceTree = (
-        <Tree
-          showLine={true}
-          showIcon={true}
-          defaultExpandedKeys={['ns=1;i=85']}
-          onSelect={this.onSelect}
-        >
-          {innerTree}
-        </Tree>
-      );
-      */
     }
     this.setState({
       endpoint,
@@ -82,7 +78,18 @@ export default class AddressSpace extends React.Component {
   }
 
   /**
-   * Browse selected node on click (Ant called it on select for some reason...)
+   * Monitor selected node on check, or unmonitor
+   */
+  onCheckToggle = (checkedKeys, event) => {
+    if (event.checked === true) {
+      this.props.monitor(this.state.endpoint, event.node.props.eventKey);
+      return;
+    }
+    this.props.unmonitor(this.state.endpoint, event.node.props.eventKey);
+  }
+
+  /**
+   * Browse selected node on click
    */
   onSelect = (selectedKeys, info) => {
     this.props.browse(this.state.endpoint, selectedKeys[0]);
@@ -125,8 +132,10 @@ export default class AddressSpace extends React.Component {
           showLine
           showIcon
           checkable
+          checkStrictly
           defaultExpandedKeys={['ns=0;i=85']}
           onSelect={this.onSelect}
+          onCheck={this.onCheckToggle}
         >
           {this.state.addressSpaceTree}
         </Tree>

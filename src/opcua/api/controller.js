@@ -20,6 +20,13 @@ const clients = {};
  */
 const opcua = (app, env, io) => {
   const router = Router();
+  /*
+  router.use((req, res, next) => {
+    req.resStruct = {
+
+    };
+  });
+  */
   const noxIo = io.of('/opcua');
 
   /**

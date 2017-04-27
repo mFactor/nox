@@ -172,8 +172,10 @@ export default class UaSession {
 
   subscriptionHandler() {
     // Subscription eventBus handler
+    /*
     this.eventBus.on(`/subscription/${endpoint}`, (msg) => {
       this.eventBus.emit('');
     });
+    */
   }
 }
