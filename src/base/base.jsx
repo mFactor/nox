@@ -43,7 +43,6 @@ export default class Base extends React.Component {
     return (
       <div>
         <NavigationBar />
-        <Drawer />
         {this.props.children}
         <Footer />
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Nav, Navbar, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Nav, NavItem } from 'react-bootstrap';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { log, toggleDrawer } from 'base/action.jsx';
 import style from 'base/static/less/drawer';
@@ -26,10 +26,12 @@ const mapDispatchToProps = (dispatch) => ({
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Drawer extends React.Component {
   static propTypes = {
+    children: PropTypes.node,
     drawer: PropTypes.shape({
       collapsed: PropTypes.bool,
     }).isRequired,
     toggleDrawer: PropTypes.func.isRequired,
+    side: PropTypes.string.isRequired,
   }
 
   constructor(props) {
@@ -62,17 +64,10 @@ export default class Drawer extends React.Component {
     return (
       <div
         role="presentation"
-        className={`nav-drawer ${this.state.className}`}
+        className={`nav-drawer ${this.props.side} ${this.state.className}`}
         onClick={() => { this.handleClick(); }}
       >
-        <Nav bsStyle="pills" stacked activeKey={1}>
-          <NavItem eventKey={1} href="#" className="nav-item">
-            NavItem 1
-          </NavItem>
-          <NavItem eventKey={2} title="Item" className="nav-item">
-            NavItem 2
-          </NavItem>
-        </Nav>
+        {this.props.children}
       </div>
     );
   }

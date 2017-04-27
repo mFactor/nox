@@ -1,24 +1,29 @@
 @import '~lib/static/lib.less';
 
 .nav-drawer {
+  /*
   &.collapsed {
     width: 0%;
     .nav-item {
       transition: 0.5s;
     }
   }
+  */
   height: 100%;
-  width: 100%;
-  position: absolute;
+  width: 15%;
+  position: fixed;
   z-index: 1040;
-  top: 0;
-  left: 0;
+  top: 100px;
+  &.nav-right {
+    right: 0;
+  }
+  &.nav-left {
+    left: 0;
+  }
   background-color: @mfe_grey;
   overflow-x: hidden;
   transition: width 0.3s ease-out;
-  // text-align: right;
 
   .nav-item {
-    // position: fixed;
   }
 }

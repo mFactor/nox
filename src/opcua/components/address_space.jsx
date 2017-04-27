@@ -47,7 +47,7 @@ export default class AddressSpace extends React.Component {
     super();
     this.state = {
       endpoint: null,
-      addressSpaceTree: null,
+      addressSpaceTree: [],
     };
     this.nodes = [];
   }
@@ -123,17 +123,40 @@ export default class AddressSpace extends React.Component {
   }
 
   render() {
+    /*
+       return (
+       <div>
+       <Tree
+       showLine
+       showIcon
+       checkable
+       checkStrictly
+       defaultExpandedKeys={['ns=0;i=85']}
+       onSelect={this.onSelect}
+       onCheck={this.onCheckToggle}
+       >
+       {this.state.addressSpaceTree}
+       </Tree>
+       </div>
+       );
+     */
     return (
-      <div>
+      <div style={{ zIndex: "1050" }}>
         <Tree
-          showLine
-          showIcon
-          checkable
-          checkStrictly
-          defaultExpandedKeys={['ns=0;i=85']}
+          className="address-space" showLine checkable defaultExpandAll
           onSelect={this.onSelect}
           onCheck={this.onCheckToggle}
         >
+          <TreeNode title="parent 1" key="0-0">
+            <TreeNode title="TEST" key="0-0-0">
+              <TreeNode title="leaf" key="0-0-0-0" />
+              <TreeNode title="leaf" key="0-0-0-1" />
+            </TreeNode>
+            <TreeNode title="parent 1-1" key="0-0-1">
+              <TreeNode title="parent 1-1-0" key="0-0-1-0" disableCheckbox />
+              <TreeNode title="parent 1-1-1" key="0-0-1-1" />
+            </TreeNode>
+          </TreeNode>
           {this.state.addressSpaceTree}
         </Tree>
       </div>
