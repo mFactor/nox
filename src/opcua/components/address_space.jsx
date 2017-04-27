@@ -1,14 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Tree, Input } from 'antd';
+import Tree, { TreeNode } from 'rc-tree';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { isServerConnected } from 'lib/libastral';
-import style from 'opcua/less/address_space';
+import style from 'opcua/static/less/address_space';
 import { log } from 'base/action.jsx';
 import * as nox from 'opcua/action.jsx';
-
-const TreeNode = Tree.TreeNode;
-const Search = Input.Search;
 
 const mapStateToProps = (state) => ({
   opcua: state.opcua,

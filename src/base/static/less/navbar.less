@@ -1,0 +1,30 @@
+@import '~lib/static/lib.less';
+
+.navbar-parent {
+  .navbar {
+    border: 0px;
+    color: rgba(255,255,255,0.8);
+    background: rgba(0,0,0,0.4);
+    height: 100px;
+    transition: all ease-out 0.3s;
+    transition: all ease-in 0.3s;
+  }
+  .navbar-nav {
+    padding-top: 25px;
+    li.nav-item {
+      &:hover {
+        border-bottom: 3px solid @mfe_red;
+      }
+      @media (max-width: @screen-sm-min) {
+        // display: none;
+      }
+    }
+  }
+  #side-menu {
+    @media (min-width: @screen-sm-min) {
+      display: none;
+    }
+    padding-top: 35px;
+    padding-right: 35px;
+  }
+}

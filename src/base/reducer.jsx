@@ -8,6 +8,13 @@ const base = (state = {}, action) => {
         ...state,
         status: action.status,
       };
+    case 'TOGGLE_DRAWER':
+      return {
+        ...state,
+        drawer: {
+          collapsed: !state.drawer.collapsed,
+        },
+      };
     default:
       return state;
   }

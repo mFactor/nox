@@ -13,11 +13,12 @@ import rootReducer from './reducers.jsx';
 import rootSaga from './sagas.jsx';
 import IsoStyle from './base/components/iso_style.jsx';
 
+let rootSagaTask;
+const sagaMiddleware = createSagaMiddleware();
+
 /**
  * Load client modules, hyrdrate initial server store
  */
-let rootSagaTask;
-const sagaMiddleware = createSagaMiddleware();
 const moduleLoad = (routes) => {
   const rootState = window.__ROOT_STATE__;
   const store = createStore(rootReducer, rootState,
@@ -47,6 +48,7 @@ const store = moduleLoad(routes);
  */
 if (module.hot) {
   module.hot.accept('./sagas.jsx', () => {
+    // eslint-disable-next-line
     const nextSaga = require('./sagas.jsx').default;
     rootSagaTask.cancel();
     rootSagaTask.done.then(() => {
@@ -54,6 +56,7 @@ if (module.hot) {
     });
   });
   module.hot.accept('./reducers.jsx', () => {
+    // eslint-disable-next-line
     const nextRoot = require('./reducers.jsx').default;
     store.replaceReducer(nextRoot);
   });

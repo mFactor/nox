@@ -9,4 +9,11 @@ const log = (level, msg) => {
   };
 };
 
-export { log };
+/**
+ * Toggle drawer
+ */
+const toggleDrawer = () => ({
+  type: 'TOGGLE_DRAWER',
+});
+
+export { log, toggleDrawer };

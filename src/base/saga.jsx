@@ -9,13 +9,15 @@ function* serverLog(action) {
   const json = yield fetchAsync(`/base/api/log`, action);
   if (json && (action.level !== 'error')) {
     yield put({
-      type: 'STATUS',
-      status: 'OK',
+      type: 'LOG_RES',
+      status: json.status,
+      msg: json.msg,
+      data: json.data,
     });
   } else {
     yield put({
-      type: 'STATUS',
-      status: 'ERR',
+      type: 'LOG_RES',
+      status: false,
     });
   }
 }

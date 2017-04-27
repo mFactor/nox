@@ -34,7 +34,7 @@
     "no-underscore-dangle": [0],
     "import/no-extraneous-dependencies": [0],
     "import/no-unresolved": [0],
-    "import/extensions": ["error", "never", {"jsx": "always"}],
+    "import/extensions": ["error", "never", {"jsx": "alaways", "png": "always"}],
     "arrow-parens": ["error", "always"],
     // End custom
     "no-unused-vars": [1],

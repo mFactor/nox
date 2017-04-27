@@ -1,4 +1,5 @@
-import { Component, PropTypes, Children } from 'react';
+import { Component, Children } from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Isomorphic hot-loading CSS (LESS), paired with 'isomorphic-style-loader'

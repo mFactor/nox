@@ -2,32 +2,32 @@ const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const server = require('./webpack.server.js');
 const client = require('./webpack.config.js');
-const config = require('./config/proc.js');
 
-process.env.NODE_ENV = 'development';
+const DEV_SERVER_PORT = 3002;
 
 /**
  * Main
- * TODO: Set up for production
  */
 (() => {
   // Set config keys to node process
   if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'development';
   }
+
+  // Set environment variables, propogate
   const env = process.env.NODE_ENV;
-  Object.keys(config[env]).forEach((param) => {
-    process.env[param.toUpperCase()] = (config[env][param]);
-  });
-  process.env.NAMESPACE = config.namespace;
   switch (env) {
     case 'development':
-      watchServer(server);
-      watchClient(client);
+      watchServer(server.dev);
+      watchClient(client.dev);
       break;
     case 'stage':
+      buildServer(server.prod);
+      buildClient(client.prod);
       break;
     case 'production':
+      buildServer(server.prod);
+      buildClient(client.prod);
       break;
     default:
       throw new Error('You must select a build environment set as NODE_ENV');
@@ -35,7 +35,8 @@ process.env.NODE_ENV = 'development';
 })();
 
 /**
- * Astral server manager
+ * Watch server-side application via webpack
+ * @param {object} server - Server webpack configuration
  */
 function watchServer(server) {
   let initServer;
@@ -47,7 +48,7 @@ function watchServer(server) {
   compiler.watch({
     aggregateTimeout: 300,
     poll: undefined,
-  }, (err, stats) => {
+  }, (err) => {
     if (err) {
       throw new Error('Server bundling error has occured');
     }
@@ -58,7 +59,7 @@ function watchServer(server) {
         initServer = httpInit(bundlePath);
         if (initServer) {
           initialLoad = false;
-          // Replace w/ nodeLog
+          // eslint-disable-next-line
           console.log(`Server bundled & restarted ${new Date()}`);
         } else {
           // server bundling error has occurred
@@ -66,15 +67,16 @@ function watchServer(server) {
         }
       });
 
-      // Destroy all open sockets
-      for (const socket of initServer.sockets.values()) {
+      // Destroy all open socket
+      initServer.sockets.forEach((socket) => {
         socket.destroy();
-      }
+      });
     } else {
       initServer = httpInit(bundlePath);
 
       if (initServer) {
         initialLoad = false;
+        // eslint-disable-next-line
         console.log('Server bundled successfully');
       } else {
         // server bundling error has occurred
@@ -85,25 +87,63 @@ function watchServer(server) {
 }
 
 /**
- * Astral client manager
+ * Watch client-side application via webpack
+ * @param {object} server - Client webpack configuration
  */
 function watchClient(client) {
   const compiler = webpack(client);
   const basePath = client.output.publicPath;
   const opts = {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
     hot: true,
     inline: true,
     lazy: false,
-    // contentBase: basePath,
-    publicPath: basePath,
+    /*
+    proxy: {
+      '*': 'http://localhost:3001',
+    },
+    */
+    // contentBase: 'http://localhost:3001',
+    publicPath: 'http://localhost:3001',
     stats: {
       colors: true,
     },
   };
   // let config = require(bundlePath).config;
   const devServer = new WebpackDevServer(compiler, opts);
-  devServer.listen(process.env.DEVPORT, 'localhost',
+  devServer.listen(DEV_SERVER_PORT, 'localhost',
                    console.log(`Dev server started...`));
+}
+
+/**
+ * Build server-side application via webpack
+ * @param {object} server - Server webpack configuration
+ */
+function buildServer(server) {
+  const compiler = webpack(server);
+
+  // Server-side webpack handling
+  compiler.run((err) => {
+    if (err) {
+      throw new Error('Server bundling error has occured');
+    }
+  });
+}
+
+/**
+ * Build client-side application via webpack
+ * @param {object} server - Client webpack configuration
+ */
+function buildClient(client) {
+  const compiler = webpack(client);
+  compiler.run((err) => {
+    if (err) {
+      throw new Error('Client bundling error has occured');
+    }
+    // console.log(stats);
+  });
 }
 
 /**
@@ -115,6 +155,7 @@ function httpInit(bundlePath) {
   const nextSocket = 0;
   try {
     // import http server
+    // eslint-disable-next-line
     httpServer = require(bundlePath).httpServer;
 
     // Shutdown httpServer
@@ -125,18 +166,19 @@ function httpInit(bundlePath) {
         sockets.delete(socketId);
       });
     });
-  } catch (e) {
-    throw new Error(e);
+  } catch (err) {
+    throw new Error(err);
   }
   return { httpServer, sockets };
 }
 
 function clearImportCache(bundlePath) {
   const cacheIds = Object.keys(require.cache);
-  cacheIds.forEach((id) => {
+  cacheIds.some((id) => {
     if (id === bundlePath) {
       delete require.cache[id];
-      // return; <- might not be necessary, testing
+      return true;
     }
+    return false;
   });
 }

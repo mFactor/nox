@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Menu, Dropdown, Row, Col, Icon, Layout } from 'antd';
+import { Row, Col } from 'react-bootstrap';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { log } from 'base/action.jsx';
 import { isServerActive } from 'lib/libastral';
 import * as nox from 'opcua/action.jsx';
-import style from 'opcua/less/rig';
-import Settings from 'opcua/components/settings.jsx';
-
-const { Header } = Layout;
+import style from 'opcua/static/less/rig';
+// import Settings from 'opcua/components/settings.jsx';
 
 const mapStateToProps = (state) => ({
   opcua: state.opcua,
@@ -44,21 +42,17 @@ export default class Rig extends Component {
     this.state = {
       endpoint: isServerActive(this.props.opcua),
       loading: false,
-      settings: (
-        <Settings ref={(settings) => { this.settings = settings; }} />
-      ),
+      settings: null,
       contextMenu: [],
     };
     Object.keys(this.props.opcua).forEach((server) => {
       this.state.contextMenu.push(
-        <Menu.Item key="1">1st menu item</Menu.Item>,
       );
     });
   }
 
   componentWillReceiveProps(nextProps) {
     const endpoint = isServerActive(nextProps.opcua);
-
     if (endpoint) {
       // Show connected endpoint
       this.setState({
@@ -88,55 +82,36 @@ export default class Rig extends Component {
   }
 
   handleContextChange = () => {
-    console.log('test');
   }
 
   render() {
-    const renderMenu = (
-      <Menu onClick={this.handleContextChange}>
-        {this.state.contextMenu}
-      </Menu>
-    );
     return (
-      <Header className="rig">
-        <Row type="flex" justify="start" align="middle">
-          <Col
-            sm={{ span: 24 }}
-            lg={{ span: 24 }}
-            xl={{ span: 24 }}
-          >
+      <div className="rig">
+        <Row>
+          <Col sm={12}>
             <ul className="rig-header">
               <li>
                 <a onClick={() => this.handleRigAction('connect')}>
                   Connect{` `}
-                  <Icon type="link" />
                 </a>
               </li>
               <li>
                 <a onClick={() => this.handleRigAction('disconnect')}>
                   Disconnect{` `}
-                  <Icon type="link" />
                 </a>
               </li>
               <li>
                 <a onClick={() => this.handleRigAction('disconnect')}>
                   Settings{` `}
-                  <Icon type="setting" />
                 </a>
               </li>
               <li>
-                <Dropdown onClick={() => this.handleRigAction('settings')} overlay={renderMenu}>
-                  <a>
-                    {this.state.endpoint}{`  `}
-                    <Icon type="down" />
-                  </a>
-                </Dropdown>
+                Stupid connected menu or something
               </li>
             </ul>
           </Col>
         </Row>
-        {this.state.settings}
-      </Header>
+      </div>
     );
   }
 }

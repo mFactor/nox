@@ -1,0 +1,38 @@
+@import '~lib/static/lib.less';
+
+.footer-parent {
+  .navbar-default {
+    height: 150px;
+    padding-top: 40px;
+    background: @mfe_grey;
+    .site-map {
+      // Footer sitemap headers
+      .header {
+		    color: rgba(186,41,50,0.9);
+        .scale-fonts(2.5vw, 2.0vw, 1.5vw, 1.3vw);
+      }
+      // Footer sitemap contents
+      .contents {
+		    list-style-type: none;
+		    padding-left: 0;
+		    color: white;
+        @media (max-width: @screen-sm-min) {
+          display: none;
+        }
+        @media (min-width: @screen-sm-min) {
+          font-size: 1.3vw;
+        }
+        @media (min-width: @screen-md-min) {
+          font-size: 0.9vw
+        }
+        @media (min-width: @screen-lg-min) {
+          font-size: 1.0vw
+        }
+      }
+    }
+    .fa {
+      color: white !important;
+      font-size: 4vw;
+    }
+  }
+}
