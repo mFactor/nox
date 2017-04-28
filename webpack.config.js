@@ -21,7 +21,6 @@ const dev = {
     filename: 'render.bundle.js',
     path: resolve(__dirname, './dist/static'),
     publicPath: `${devUrl}/`,
-    // publicPath: '/',
   },
   context: resolve(__dirname, './src'),
   resolve: {
@@ -85,12 +84,12 @@ const dev = {
       },
       {
         test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-        loader: 'file-loader?name=static/fonts/[name].[ext]',
+        loader: 'file-loader?emitFile=false&&publicPath=static/&name=fonts/[name].[ext]',
       },
       {
         test: /\.(png|jpg|jpeg)/,
         exclude: /node_modules/,
-        loader: "file-loader?publicPath=static/&name=img/[name].[ext]",
+        loader: "file-loader?emitFile=false&publicPath=static/&name=img/[name].[ext]",
       },
     ],
   },

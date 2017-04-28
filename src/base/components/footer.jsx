@@ -48,12 +48,7 @@ export default class Footer extends React.Component {
         <Navbar fluid className="navbar-default navbar-fixed-bottom">
           <div className="container-fluid">
             <Row>
-              <Col xs={8} md={7} lg={6}>
-                Logo and info here...maybe log?
-              </Col>
-              <Col xs={6} md={5} lg={4}>
-                {this.state.socialLinks}
-              </Col>
+              Stuff
             </Row>
           </div>
         </Navbar>

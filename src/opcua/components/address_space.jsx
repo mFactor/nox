@@ -115,7 +115,7 @@ export default class AddressSpace extends React.Component {
       } else {
         // Bottom of tree
         tmpNodes.push(
-          <TreeNode title={iter.browseName} key={iter.nodeId} />,
+          <TreeNode title={iter.browseName} key={iter.nodeId} className="test" />,
         );
       }
     });
@@ -143,20 +143,11 @@ export default class AddressSpace extends React.Component {
     return (
       <div style={{ zIndex: "1050" }}>
         <Tree
-          className="address-space" showLine checkable defaultExpandAll
+          defaultExpandAll
+          className="address-space"
           onSelect={this.onSelect}
           onCheck={this.onCheckToggle}
         >
-          <TreeNode title="parent 1" key="0-0">
-            <TreeNode title="TEST" key="0-0-0">
-              <TreeNode title="leaf" key="0-0-0-0" />
-              <TreeNode title="leaf" key="0-0-0-1" />
-            </TreeNode>
-            <TreeNode title="parent 1-1" key="0-0-1">
-              <TreeNode title="parent 1-1-0" key="0-0-1-0" disableCheckbox />
-              <TreeNode title="parent 1-1-1" key="0-0-1-1" />
-            </TreeNode>
-          </TreeNode>
           {this.state.addressSpaceTree}
         </Tree>
       </div>

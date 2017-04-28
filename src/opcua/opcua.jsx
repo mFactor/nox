@@ -5,6 +5,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { log } from 'base/action.jsx';
 import Drawer from 'base/components/drawer.jsx';
 import AddressSpace from 'opcua/components/address_space.jsx';
+import Rig from 'opcua/components/rig.jsx';
 import style from 'opcua/static/less/opcua';
 
 const mapStateToProps = (state) => ({
@@ -32,21 +33,7 @@ export default class OpcUa extends React.Component {
     return (
       <div>
         <Drawer side="nav-left">
-          <ButtonGroup justified>
-            <Button href="#">Connect</Button>
-            <Button href="#">Disconnect</Button>
-          </ButtonGroup>
-          <form>
-            <FormGroup controlId="formBasicText">
-              <FormControl
-                type="text"
-                value={this.state.value}
-                placeholder="opc.tcp://mfactor.com:4840"
-                onChange={this.handleChange}
-              />
-              <FormControl.Feedback />
-            </FormGroup>
-          </form>
+          <Rig />
           <AddressSpace />
         </Drawer>
         <Drawer side="nav-right" />

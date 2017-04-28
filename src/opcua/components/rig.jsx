@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-bootstrap';
+import { ButtonGroup, Button, FormGroup, FormControl } from 'react-bootstrap';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { log } from 'base/action.jsx';
 import { isServerActive } from 'lib/libastral';
@@ -87,30 +87,33 @@ export default class Rig extends Component {
   render() {
     return (
       <div className="rig">
-        <Row>
-          <Col sm={12}>
-            <ul className="rig-header">
-              <li>
-                <a onClick={() => this.handleRigAction('connect')}>
-                  Connect{` `}
-                </a>
-              </li>
-              <li>
-                <a onClick={() => this.handleRigAction('disconnect')}>
-                  Disconnect{` `}
-                </a>
-              </li>
-              <li>
-                <a onClick={() => this.handleRigAction('disconnect')}>
-                  Settings{` `}
-                </a>
-              </li>
-              <li>
-                Stupid connected menu or something
-              </li>
-            </ul>
-          </Col>
-        </Row>
+        <ButtonGroup justified>
+          <Button
+            className="rig-action"
+            href="#"
+            onClick={() => { this.handleRigAction('connect'); }}
+          >
+            Connect
+          </Button>
+          <Button
+            className="rig-action"
+            href="#"
+            onClick={() => { this.handleRigAction('disconnect'); }}
+          >
+            Disconnect
+          </Button>
+        </ButtonGroup>
+        <form>
+          <FormGroup controlId="formBasicText">
+            <FormControl
+              type="text"
+              value={this.state.value}
+              placeholder="opc.tcp://mfactor.com:4840"
+              onChange={this.handleChange}
+            />
+            <FormControl.Feedback />
+          </FormGroup>
+        </form>
       </div>
     );
   }

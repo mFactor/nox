@@ -3,21 +3,23 @@
 .navbar-parent {
   .navbar {
     border: 0px;
-    color: rgba(255,255,255,0.8);
-    background: rgba(0,0,0,0.4);
-    height: 100px;
+    color: @mfe_grey;
+    background: @mfe_grey;
+    height: 75px;
     transition: all ease-out 0.3s;
     transition: all ease-in 0.3s;
   }
   .navbar-nav {
-    padding-top: 25px;
-    li.nav-item {
+    padding-top: 15px;
+    li.nav-link {
       &:hover {
         border-bottom: 3px solid @mfe_red;
       }
       @media (max-width: @screen-sm-min) {
         // display: none;
       }
+    }
+    li.nav-social {
     }
   }
   #side-menu {

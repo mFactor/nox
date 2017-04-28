@@ -4,3 +4,207 @@
   color: white;
   z-index: 1050;
 }
+
+@treePrefixCls: rc-tree;
+@icon-fs: 15px;
+@expand-fs: 10px;
+.@{treePrefixCls} {
+  margin: 0;
+  padding: 5px;
+  li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    white-space: nowrap;
+    outline: 0;
+    .draggable {
+      color: #333;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      user-select: none;
+      /* Required to make elements draggable in old WebKit */
+      -khtml-user-drag: element;
+      -webkit-user-drag: element;
+    }
+    &.drag-over {
+      > .draggable {
+        background-color: #316ac5;
+        color: white;
+        border: 1px #316ac5 solid;
+        opacity: 0.8;
+      }
+    }
+    &.drag-over-gap-top {
+      > .draggable {
+        border-top: 2px blue solid;
+      }
+    }
+    &.drag-over-gap-bottom {
+      > .draggable {
+        border-bottom: 2px blue solid;
+      }
+    }
+    &.filter-node {
+      > .@{treePrefixCls}-node-content-wrapper {
+        color: #a60000!important;
+        font-weight: bold!important;
+      }
+    }
+    ul {
+      margin: 0;
+      padding: 0 0 0 18px;
+      &.@{treePrefixCls}-line {
+        background: url('data:image/gif;base64,R0lGODlhCQACAIAAAMzMzP///yH5BAEAAAEALAAAAAAJAAIAAAIEjI9pUAA7') 0 0 repeat-y;
+      }
+    }
+    .@{treePrefixCls}-node-content-wrapper {
+      display: inline-block;
+      padding: 1px 3px 0 0;
+      margin: 0;
+      cursor: pointer;
+      height: 17px;
+      text-decoration: none;
+      vertical-align: top;
+    }
+    span {
+      &.@{treePrefixCls}-switcher,
+      &.@{treePrefixCls}-checkbox,
+      &.@{treePrefixCls}-iconEle {
+        line-height: 16px;
+        margin-right: 2px;
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        vertical-align: middle;
+        border: 0 none;
+        cursor: pointer;
+        outline: none;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+      }
+      &.@{treePrefixCls}-icon_loading {
+        margin-right: 2px;
+        vertical-align: top;
+      }
+      &.@{treePrefixCls}-switcher {
+        margin-bottom: 2px;
+        &.@{treePrefixCls}-switcher-noop {
+          cursor: auto;
+        }
+        &.@{treePrefixCls}-noline_open {
+          background-position: -92px -72px;
+          &:before {
+            content: "\f068";
+            font-family: FontAwesome;
+            color: white;
+            font-size: @expand-fs;
+          }
+        }
+        &.@{treePrefixCls}-noline_close {
+          background-position: -74px -72px;
+          &:before {
+            content: "\f067";
+            font-family: FontAwesome;
+            color: white;
+            font-size: @expand-fs;
+          }
+        }
+        &.@{treePrefixCls}-noline_docu {
+          background: none;
+        }
+      }
+      &.@{treePrefixCls}-checkbox {
+        background-color: white;
+        width: 10px;
+        height: 10px;
+        margin: 0 3px;
+        background-position: 0 0;
+        &-checked {
+          background-position: -14px 0;
+        }
+        &-indeterminate {
+          background-position: -14px -28px;
+        }
+        &-disabled {
+          background-position: 0 -56px;
+        }
+        &.@{treePrefixCls}-checkbox-checked.@{treePrefixCls}-checkbox-disabled {
+          background-position: -14px -56px;
+        }
+        &.@{treePrefixCls}-checkbox-indeterminate.@{treePrefixCls}-checkbox-disabled {
+          position: relative;
+          background: #ccc;
+          border-radius: 3px;
+          &::after {
+            content: ' ';
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            position: absolute;
+            left: 3px;
+            top: 5px;
+            width: 5px;
+            height: 0;
+            border: 2px solid #fff;
+            border-top: 0;
+            border-left: 0;
+          }
+        }
+      }
+    }
+  }
+  &-child-tree {
+    display: none;
+    &-open {
+      display: block;
+    }
+  }
+  &-treenode-disabled {
+    >span,
+    >a,
+    >a span {
+      color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+  &-node-selected {
+    // background-color: #ffe6b0;
+    /*
+    & li {
+      border-right: 1px solid @mfe_red;
+    }
+    */
+    // opacity: 0.8;
+  }
+  &-icon__open {
+    margin-right: 2px;
+    background-position: -110px -16px;
+    vertical-align: top;
+    &:before {
+      content: "\f07c";
+      font-family: FontAwesome;
+      font-size: @icon-fs;
+    }
+  }
+  &-icon__close {
+    margin-right: 2px;
+    background-position: -110px 0;
+    vertical-align: top;
+    &:before {
+      content: "\f07b";
+      font-family: FontAwesome;
+      font-size: @icon-fs;
+    }
+  }
+  &-icon__docu {
+    margin-right: 2px;
+    background-position: -110px -32px;
+    vertical-align: top;
+    &:before {
+      content: "\f02b";
+      font-family: FontAwesome;
+      font-size: @icon-fs;
+    }
+  }
+}
