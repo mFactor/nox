@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { log } from 'base/action.jsx';
@@ -18,7 +18,7 @@ const mapDispatchToProps = (dispatch) => ({
  */
 @withStyles(style)
 @connect(mapStateToProps, mapDispatchToProps)
-export default class Home extends React.Component {
+export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,10 +27,8 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <div style={{ height: '100%' }}>
-        <div className="container">
-          Hello mFactor
-        </div>
+      <div className="container" style={{ height: '100%' }}>
+        Hello mFactor
       </div>
     );
   }

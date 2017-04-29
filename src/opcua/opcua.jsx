@@ -6,6 +6,7 @@ import { log } from 'base/action.jsx';
 import Drawer from 'base/components/drawer.jsx';
 import AddressSpace from 'opcua/components/address_space.jsx';
 import Rig from 'opcua/components/rig.jsx';
+import Subscription from 'opcua/components/subscription.jsx';
 import style from 'opcua/static/less/opcua';
 
 const mapStateToProps = (state) => ({
@@ -29,6 +30,9 @@ export default class OpcUa extends React.Component {
     };
   }
 
+  componentDidMount() {
+  }
+
   render() {
     return (
       <div>
@@ -36,6 +40,7 @@ export default class OpcUa extends React.Component {
           <Rig />
           <AddressSpace />
         </Drawer>
+        <Subscription />
         <Drawer side="nav-right" />
       </div>
     );

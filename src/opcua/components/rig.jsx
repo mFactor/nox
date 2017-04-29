@@ -6,7 +6,6 @@ import { log } from 'base/action.jsx';
 import { isServerActive } from 'lib/libastral';
 import * as nox from 'opcua/action.jsx';
 import style from 'opcua/static/less/rig';
-// import Settings from 'opcua/components/settings.jsx';
 
 const mapStateToProps = (state) => ({
   opcua: state.opcua,

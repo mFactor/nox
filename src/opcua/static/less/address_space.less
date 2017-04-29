@@ -8,6 +8,7 @@
 @treePrefixCls: rc-tree;
 @icon-fs: 15px;
 @expand-fs: 10px;
+
 .@{treePrefixCls} {
   margin: 0;
   padding: 5px;
@@ -18,12 +19,13 @@
     white-space: nowrap;
     outline: 0;
     .draggable {
-      color: #333;
+      color: white;
       -moz-user-select: none;
       -khtml-user-select: none;
       -webkit-user-select: none;
       user-select: none;
-      /* Required to make elements draggable in old WebKit */
+
+      // Required to make elements draggable in old WebKit
       -khtml-user-drag: element;
       -webkit-user-drag: element;
     }
@@ -47,16 +49,13 @@
     }
     &.filter-node {
       > .@{treePrefixCls}-node-content-wrapper {
-        color: #a60000!important;
-        font-weight: bold!important;
+        color: #a60000 !important;
+        font-weight: bold !important;
       }
     }
     ul {
       margin: 0;
       padding: 0 0 0 18px;
-      &.@{treePrefixCls}-line {
-        background: url('data:image/gif;base64,R0lGODlhCQACAIAAAMzMzP///yH5BAEAAAEALAAAAAAJAAIAAAIEjI9pUAA7') 0 0 repeat-y;
-      }
     }
     .@{treePrefixCls}-node-content-wrapper {
       display: inline-block;
