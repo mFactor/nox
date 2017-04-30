@@ -82,6 +82,7 @@ app.use((req, res) => {
     base: req[env.NAMESPACE].base,
     opcua: req[env.NAMESPACE].opcua,
   };
+
   const store = createStore(rootReducer, storeState);
 
   // React route matching, server side rendering

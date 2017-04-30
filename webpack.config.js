@@ -28,7 +28,7 @@ const dev = {
       resolve('./src'),
       resolve('./node_modules'),
     ],
-    extensions: ['.jsx', '.js', '.json', '.less', '.scss'],
+    extensions: ['.jsx', '.js', '.json', '.less'], // '.css'],
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
@@ -74,14 +74,17 @@ const dev = {
           'less-loader',
         ],
       },
+      /*
       {
         test: /\.css$/,
+        exclude: /node_modules/,
         loaders: [
-          'style-loader',
-          { loader: 'css-loader', options: { importLoaders: 1 } },
+          'isomorphic-style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1, modules: true } },
           'postcss-loader',
         ],
       },
+      */
       {
         test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         loader: 'file-loader?emitFile=false&&publicPath=static/&name=fonts/[name].[ext]',
