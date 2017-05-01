@@ -1,5 +1,7 @@
+const { join } = require('path');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
+const notifier = require('node-notifier');
 const server = require('./webpack.server.js');
 const client = require('./webpack.config.js');
 
@@ -16,6 +18,7 @@ const DEV_SERVER_PORT = 3002;
 
   // Set environment variables, propogate
   const env = process.env.NODE_ENV;
+
   switch (env) {
     case 'development':
       watchServer(server.dev);
@@ -30,6 +33,7 @@ const DEV_SERVER_PORT = 3002;
       buildClient(client.prod);
       break;
     default:
+      notifyErr();
       throw new Error('You must select a build environment set as NODE_ENV');
   }
 })();
@@ -45,15 +49,18 @@ function watchServer(server) {
   const bundlePath = `${server.output.path}/${server.output.filename}`;
 
   // Server-side webpack handling
-  compiler.watch({
+  const test = compiler.watch({
     aggregateTimeout: 300,
     poll: undefined,
   }, (err) => {
     if (err) {
+      notifyErr();
       throw new Error('Server bundling error has occured');
     }
+
     // clear bundle imports
     clearImportCache(bundlePath);
+
     if (!initialLoad) {
       initServer.httpServer.close(() => {
         initServer = httpInit(bundlePath);
@@ -106,7 +113,7 @@ function watchClient(client) {
     },
     */
     // contentBase: 'http://localhost:3001',
-    publicPath: 'http://localhost:3001',
+    // publicPath: 'http://localhost:3001',
     stats: {
       colors: true,
     },
@@ -127,7 +134,8 @@ function buildServer(server) {
   // Server-side webpack handling
   compiler.run((err) => {
     if (err) {
-      throw new Error('Server bundling error has occured');
+      notifyErr();
+      throw new Error('Server bundling error');
     }
   });
 }
@@ -140,7 +148,8 @@ function buildClient(client) {
   const compiler = webpack(client);
   compiler.run((err) => {
     if (err) {
-      throw new Error('Client bundling error has occured');
+      notifyErr();
+      throw new Error('Client bundling error');
     }
     // console.log(stats);
   });
@@ -167,6 +176,7 @@ function httpInit(bundlePath) {
       });
     });
   } catch (err) {
+    notifyErr();
     throw new Error(err);
   }
   return { httpServer, sockets };
@@ -180,5 +190,12 @@ function clearImportCache(bundlePath) {
       return true;
     }
     return false;
+  });
+}
+
+function notifyErr() {
+  notifier.notify({
+    title: 'Nox',
+    message: 'A critical error occured',
   });
 }
